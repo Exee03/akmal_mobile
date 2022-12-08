@@ -54,7 +54,7 @@ jobs:
           export PATH="$PATH":"$HOME/.pub-cache/bin"
           pub global activate cider
 
-       - name: Change version number
+      - name: Change version number
         run: |
           cider release
           cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}+${{ env.NUMBER_OF_COMMITS }}

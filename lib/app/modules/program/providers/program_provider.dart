@@ -12,9 +12,9 @@ class ProgramProvider extends GetConnect {
     ref = db.collection('program');
   }
 
-  Future<Program?> getProgram(int id) async {
-    final response = await get('program/$id');
-    return response.body;
+  Future<Program?> getProgram(String id) async {
+    final response = await ref.doc(id).get();
+    return Program.fromJson(response.data()!);
   }
 
   Stream<List<Program>> getPrograms() {
@@ -23,6 +23,27 @@ class ProgramProvider extends GetConnect {
           (e) => Program.fromFirestore(e),
         )
         .toList());
+  }
+
+  Stream<List<Program>> getProgramsByMonth(int month) {
+    final now = DateTime.now();
+    final start = DateTime(now.year, month);
+    final end = DateTime(now.year, month + 1);
+    return ref
+        .where(
+          'start_date',
+          isGreaterThanOrEqualTo: start,
+        )
+        .where(
+          'start_date',
+          isLessThan: end,
+        )
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map(
+              (e) => Program.fromFirestore(e),
+            )
+            .toList());
   }
 
   Future<Response<Program>> postProgram(Program program) async =>

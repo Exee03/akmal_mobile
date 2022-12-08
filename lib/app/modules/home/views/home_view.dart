@@ -3,96 +3,44 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
+import '../wigets/bottom_appbar.dart';
+import '../wigets/empty.dart';
+import '../wigets/menu.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            pinned: true,
-            snap: true,
-            floating: true,
-            expandedHeight: 180.0,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                'assets/images/background.jpg',
-                fit: BoxFit.cover,
-              ),
-              collapseMode: CollapseMode.parallax,
-              // title: Text(
-              //   'Aplikasi Utama',
-              //   textAlign: ,
-              //   style: Theme.of(context).textTheme.headline5?.copyWith(
-              //         color: Colors.white,
-              //       ),
-              // ),
+      appBar: AppBar(
+        elevation: 0,
+        toolbarHeight: 90,
+        bottom: const BottomAppbarWidget(),
+        actions: [
+          IconButton(
+            onPressed: controller.logout,
+            icon: const Icon(Icons.logout),
+          ),
+        ],
+      ),
+      body: ListView(
+        children: [
+          const SizedBox(height: 21),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 21),
+            child: Text(
+              'Aplikasi Utama'.toUpperCase(),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 8.0,
-                horizontal: 12,
-              ),
-              child: Text(
-                'Aplikasi Utama',
-                style: Theme.of(context).textTheme.headline5,
-              ),
-            ),
-          ),
-          const SliverToBoxAdapter(
-            child: Divider(
-              thickness: 2,
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.only(top: 12),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                childCount: controller.menus.length,
-                (BuildContext context, int index) {
-                  final menu = controller.menus[index];
-                  final size =
-                      (Theme.of(context).textTheme.headline3?.fontSize ?? 80) +
-                          30;
-
-                  return Column(
-                    children: [
-                      Card(
-                        child: InkWell(
-                          onTap: menu.onPressed,
-                          child: SizedBox.square(
-                            dimension: size,
-                            child: Center(
-                              child: Icon(
-                                menu.icon,
-                                color: Colors.black54,
-                                size: Theme.of(context)
-                                    .textTheme
-                                    .headline3
-                                    ?.fontSize,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          menu.title,
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+          Padding(
+            padding: const EdgeInsets.only(top: 21),
+            child: Obx(
+              () => controller.menus.isEmpty
+                  ? const EmptyWidget()
+                  : const MenuWidget(),
             ),
           ),
         ],

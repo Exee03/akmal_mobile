@@ -47,17 +47,16 @@ jobs:
           flutter-version: ${{env.FLUTTER_VERSION}}
           cache: true
 
-      # Get dependencies and generating appbundle
-      # Here I'm using appbundle, feel free to change it to APK
-      - name: Get cider package
-        run: |
-          export PATH="$PATH":"$HOME/.pub-cache/bin"
-          pub global activate cider
+      - name: Get firebase option
+        run: echo "${{ secrets.FIREBASE_OPTION }}" > lib/firebase_options.dart
+
+      - name: Get dependencies
+        run: flutter pub get
 
       - name: Change version number
         run: |
-          cider release
-          cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}+${{ env.NUMBER_OF_COMMITS }}
+          flutter pub run cider release
+          flutter pub run cider version ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}+${{ env.NUMBER_OF_COMMITS }}
 
       # Here we have already updated the version on pubspec.yaml
       # But, tha changes are not commited to version control

@@ -131,5 +131,5 @@ jobs:
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-          # groups: testers
+          groups: testers
           file: app-release.apk

@@ -8,6 +8,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 import 'app/routes/app_pages.dart';
+import 'app/services/translation_service.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -27,6 +28,9 @@ Future<void> main() async {
         ),
         textTheme: GoogleFonts.nunitoTextTheme(),
       ),
+      translations: TranslationService(),
+      locale: TranslationService.locale,
+      fallbackLocale: TranslationService.fallbackLocale,
     ),
   );
 }

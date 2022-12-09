@@ -14,6 +14,12 @@ class ProgramView extends GetView<ProgramController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(borderRadius),
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {},
@@ -21,6 +27,8 @@ class ProgramView extends GetView<ProgramController> {
           ),
         ],
         title: TextField(
+          onTap: controller.onSearch,
+          readOnly: true,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.zero,
             border: OutlineInputBorder(
@@ -32,7 +40,6 @@ class ProgramView extends GetView<ProgramController> {
             fillColor: Colors.white70,
             prefixIcon: const Icon(Icons.search),
           ),
-          onChanged: controller.onSearchChanged,
         ),
         bottom: const MonthWidget(),
       ),

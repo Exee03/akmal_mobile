@@ -1,3 +1,4 @@
+import 'package:akmal_mobile/app/configs/constant.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -15,6 +16,11 @@ class HomeView extends GetView<HomeController> {
       appBar: AppBar(
         elevation: 0,
         toolbarHeight: 90,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(borderRadius),
+          ),
+        ),
         bottom: const BottomAppbarWidget(),
         actions: [
           IconButton(

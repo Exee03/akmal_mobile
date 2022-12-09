@@ -1,12 +1,13 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:akmal_mobile/app/modules/program/models/program_model.dart';
 import 'package:akmal_mobile/app/modules/program/providers/program_provider.dart';
+import 'package:akmal_mobile/app/modules/program/views/search_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
 import 'package:intl/intl.dart';
+import 'package:kt_dart/kt.dart';
 
 class ProgramController extends GetxController {
   //TODO: Implement ProgramController
@@ -15,11 +16,12 @@ class ProgramController extends GetxController {
   final selectedMonth = DateTime.now().month.obs;
   StreamSubscription? streamSubscription;
   final searchTerm = "".obs;
+  final _isSearch = false.obs;
 
   final scrollController = ScrollController();
 
-  bool get isSearch => searchTerm.isNotEmpty;
-  List<Program> get programs => isSearch
+  bool get isSearch => _isSearch.isTrue;
+  List<Program> get programs => isSearch && searchTerm.isNotEmpty
       ? _programs
           .where(
             (e) =>
@@ -28,6 +30,13 @@ class ProgramController extends GetxController {
           )
           .toList()
       : _programs.value;
+
+  List<DateTime> get monthYearOfPrograms => programs
+      .toImmutableList()
+      .map((e) => DateTime(e.startDate!.year, e.startDate!.month))
+      .distinct()
+      .sortedDescending()
+      .asList();
 
   final count = 0.obs;
   @override
@@ -46,15 +55,6 @@ class ProgramController extends GetxController {
         );
       },
     );
-
-    searchTerm.map((data) => data?.isEmpty ?? false).distinct().listen((value) {
-      if (value) {
-        selectedMonth.value = DateTime.now().month;
-      } else {
-        selectedMonth.value = 13;
-      }
-      getData();
-    });
   }
 
   @override
@@ -75,7 +75,7 @@ class ProgramController extends GetxController {
     streamSubscription?.cancel();
     if (isSearch) {
       streamSubscription = _programProvider.getPrograms().listen((data) {
-        _programs.value = data.toList();
+        _programs.value = data;
       });
     } else {
       streamSubscription = _programProvider
@@ -100,5 +100,35 @@ class ProgramController extends GetxController {
     debouncer.call(() {
       searchTerm.value = value.toLowerCase();
     });
+  }
+
+  Future<void> onSearch() async {
+    Get.to(
+      () => const SearchView(),
+      fullscreenDialog: true,
+    );
+    _isSearch.value = true;
+    getData();
+  }
+
+  void onCancelSearch() {
+    _isSearch.value = false;
+    getData();
+    Get.back();
+  }
+
+  List<Program> getProgramByMonthYear(DateTime value) {
+    return _programs.value
+        .where(
+          (element) => DateTime(
+            element.startDate!.year,
+            element.startDate!.month,
+          ).isAtSameMomentAs(value),
+        )
+        .toList();
+  }
+
+  String getMontYearByDate(DateTime value) {
+    return DateFormat('MMMM y').format(value);
   }
 }

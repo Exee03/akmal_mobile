@@ -23,7 +23,7 @@ class ProgramDetailView extends GetView<ProgramDetailController> {
         child: FloatingActionButton.extended(
           onPressed: controller.addCalendar,
           backgroundColor: Theme.of(context).colorScheme.primary,
-          label: const Text('Tambah ke Kalendar'),
+          label: Text('add_to_calendar'.tr),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
@@ -34,7 +34,7 @@ class ProgramDetailView extends GetView<ProgramDetailController> {
         padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 8),
         children: [
           TileWidget(
-            label: 'Nama Acara',
+            label: 'program_name'.tr,
             value: controller.title,
           ),
           if (controller.isSameDay) ...[
